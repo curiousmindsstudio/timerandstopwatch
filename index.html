@@ -360,40 +360,180 @@
   .preset-btn:hover { color: var(--accent2); border-color: var(--accent2); }
 
   /* CLOCK PANEL */
-  .clock-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+  .clock-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 12px;
+    flex-wrap: wrap;
   }
-  @media (max-width: 600px) { .clock-grid { grid-template-columns: 1fr; } }
+  .clock-header-row h2 {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
 
-  .clock-widget {
+  /* Search box */
+  .tz-search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 420px;
+  }
+  .tz-search-input {
+    width: 100%;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 24px;
-    text-align: center;
+    border-radius: 12px;
+    padding: 10px 16px 10px 38px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
   }
-  .clock-widget h3 {
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+  .tz-search-input:focus { border-color: var(--accent); }
+  .tz-search-input::placeholder { color: var(--muted); }
+  .tz-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     color: var(--muted);
-    margin-bottom: 16px;
+    font-size: 0.9rem;
+    pointer-events: none;
   }
-  .analog-clock {
-    width: 160px;
-    height: 160px;
-    margin: 0 auto 16px;
+  .tz-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0; right: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  .tz-dropdown.open { display: block; }
+  .tz-option {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .tz-option:last-child { border-bottom: none; }
+  .tz-option:hover { background: rgba(124,106,247,0.15); }
+  .tz-option .tz-flag { font-size: 1.1rem; flex-shrink: 0; }
+  .tz-option .tz-name { color: var(--text); font-weight: 600; }
+  .tz-option .tz-zone { color: var(--muted); font-size: 0.74rem; margin-left: auto; white-space: nowrap; }
+
+  /* World clock grid */
+  .world-clock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  .tz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px 20px;
     position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+    animation: fadeIn 0.3s ease;
+    overflow: hidden;
   }
-  .analog-clock svg { width: 100%; height: 100%; }
-  .clock-face { fill: var(--surface2); stroke: var(--border); stroke-width: 2; }
-  .hour-hand, .minute-hand, .second-hand { transform-origin: 80px 80px; transition: transform 0.1s; }
-  .hour-hand { stroke: var(--text); stroke-width: 4; stroke-linecap: round; }
-  .minute-hand { stroke: var(--text); stroke-width: 3; stroke-linecap: round; }
-  .second-hand { stroke: var(--accent); stroke-width: 2; stroke-linecap: round; }
-  .center-dot { fill: var(--accent); }
+  .tz-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 100% 0%, rgba(124,106,247,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .tz-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .tz-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .tz-card-info { flex: 1; min-width: 0; }
+  .tz-card-flag { font-size: 1.6rem; margin-bottom: 4px; }
+  .tz-card-country {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tz-card-zone {
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+  }
+  .tz-delete-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+  .tz-delete-btn:hover { background: rgba(247,106,106,0.15); color: var(--danger); border-color: var(--danger); }
+  .tz-time {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .tz-date-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .tz-date {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .tz-offset {
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    background: rgba(124,106,247,0.12);
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+  .tz-empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .tz-empty span { font-size: 2rem; display: block; margin-bottom: 10px; }
 
   .digital-big {
     font-family: 'Space Mono', monospace;
@@ -497,33 +637,35 @@
 
   <!-- CLOCK PANEL -->
   <div class="panel active" id="panel-clock">
-    <div class="clock-grid">
-      <div class="clock-widget">
-        <h3>Analog Clock</h3>
-        <div class="analog-clock">
-          <svg viewBox="0 0 160 160">
-            <circle class="clock-face" cx="80" cy="80" r="78"/>
-            <!-- tick marks -->
-            <g id="ticks"></g>
-            <!-- hands -->
-            <line id="hourHand" class="hour-hand" x1="80" y1="80" x2="80" y2="38"/>
-            <line id="minHand" class="minute-hand" x1="80" y1="80" x2="80" y2="26"/>
-            <line id="secHand" class="second-hand" x1="80" y1="90" x2="80" y2="20"/>
-            <circle class="center-dot" cx="80" cy="80" r="4"/>
-          </svg>
-        </div>
-      </div>
 
-      <div class="clock-widget">
-        <h3>Digital Clock</h3>
-        <div class="digital-big" id="digitalClock">12:00:00</div>
+    <!-- Local time bar -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+      <div>
+        <div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Your Local Time</div>
+        <div class="digital-big" id="digitalClock" style="font-size:2rem;">12:00:00</div>
         <div class="digital-date" id="digitalDate">Loading...</div>
-        <div class="spacer"></div>
-        <div id="digitalAmPm" style="font-size:0.85rem;color:var(--accent);font-weight:700;">AM</div>
+      </div>
+      <div style="text-align:right;">
+        <div id="digitalAmPm" style="font-size:1.4rem;color:var(--accent);font-weight:800;font-family:'Space Mono',monospace;">AM</div>
+        <div id="localTzName" style="font-size:0.72rem;color:var(--muted);margin-top:4px;"></div>
       </div>
     </div>
 
-    <div class="stats-row">
+    <!-- Search + Add -->
+    <div class="clock-header-row">
+      <h2>🌍 World Clocks</h2>
+      <div class="tz-search-wrap">
+        <span class="tz-search-icon">🔍</span>
+        <input class="tz-search-input" id="tzSearch" type="text" placeholder="Search country or city..." autocomplete="off" oninput="filterTz()" onfocus="openTzDrop()" onblur="closeTzDrop()">
+        <div class="tz-dropdown" id="tzDropdown"></div>
+      </div>
+    </div>
+
+    <!-- World clock cards -->
+    <div class="world-clock-grid" id="worldClockGrid"></div>
+
+    <!-- Stats -->
+    <div class="stats-row" style="margin-top:20px;">
       <div class="stat-box">
         <div class="stat-val" id="pomoDoneCount">0</div>
         <div class="stat-key">Pomodoros Done</div>
@@ -703,55 +845,281 @@ function switchTab(name) {
   document.getElementById('panel-' + name).classList.add('active');
 }
 
-// ─── LIVE CLOCK ────────────────────────────────────────────────────────────
-function buildTicks() {
-  const g = document.getElementById('ticks');
-  for (let i = 0; i < 60; i++) {
-    const angle = (i / 60) * 360;
-    const isMajor = i % 5 === 0;
-    const r1 = isMajor ? 60 : 68, r2 = 74;
-    const rad = (angle - 90) * Math.PI / 180;
-    const x1 = 80 + r1 * Math.cos(rad), y1 = 80 + r1 * Math.sin(rad);
-    const x2 = 80 + r2 * Math.cos(rad), y2 = 80 + r2 * Math.sin(rad);
-    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',x1); line.setAttribute('y1',y1);
-    line.setAttribute('x2',x2); line.setAttribute('y2',y2);
-    line.setAttribute('stroke', isMajor ? '#4a4a60' : '#2a2a3a');
-    line.setAttribute('stroke-width', isMajor ? 2 : 1);
-    g.appendChild(line);
-  }
-}
-buildTicks();
+// ─── TIMEZONE DATA ─────────────────────────────────────────────────────────
+const TZ_LIST = [
+  { flag:'🇦🇫', name:'Afghanistan', city:'Kabul', tz:'Asia/Kabul' },
+  { flag:'🇦🇱', name:'Albania', city:'Tirana', tz:'Europe/Tirane' },
+  { flag:'🇩🇿', name:'Algeria', city:'Algiers', tz:'Africa/Algiers' },
+  { flag:'🇦🇷', name:'Argentina', city:'Buenos Aires', tz:'America/Argentina/Buenos_Aires' },
+  { flag:'🇦🇲', name:'Armenia', city:'Yerevan', tz:'Asia/Yerevan' },
+  { flag:'🇦🇺', name:'Australia (Sydney)', city:'Sydney', tz:'Australia/Sydney' },
+  { flag:'🇦🇺', name:'Australia (Melbourne)', city:'Melbourne', tz:'Australia/Melbourne' },
+  { flag:'🇦🇺', name:'Australia (Perth)', city:'Perth', tz:'Australia/Perth' },
+  { flag:'🇦🇹', name:'Austria', city:'Vienna', tz:'Europe/Vienna' },
+  { flag:'🇦🇿', name:'Azerbaijan', city:'Baku', tz:'Asia/Baku' },
+  { flag:'🇧🇭', name:'Bahrain', city:'Manama', tz:'Asia/Bahrain' },
+  { flag:'🇧🇩', name:'Bangladesh', city:'Dhaka', tz:'Asia/Dhaka' },
+  { flag:'🇧🇾', name:'Belarus', city:'Minsk', tz:'Europe/Minsk' },
+  { flag:'🇧🇪', name:'Belgium', city:'Brussels', tz:'Europe/Brussels' },
+  { flag:'🇧🇴', name:'Bolivia', city:'La Paz', tz:'America/La_Paz' },
+  { flag:'🇧🇦', name:'Bosnia & Herzegovina', city:'Sarajevo', tz:'Europe/Sarajevo' },
+  { flag:'🇧🇷', name:'Brazil (Brasilia)', city:'Brasilia', tz:'America/Sao_Paulo' },
+  { flag:'🇧🇳', name:'Brunei', city:'Bandar Seri Begawan', tz:'Asia/Brunei' },
+  { flag:'🇧🇬', name:'Bulgaria', city:'Sofia', tz:'Europe/Sofia' },
+  { flag:'🇰🇭', name:'Cambodia', city:'Phnom Penh', tz:'Asia/Phnom_Penh' },
+  { flag:'🇨🇲', name:'Cameroon', city:'Yaoundé', tz:'Africa/Douala' },
+  { flag:'🇨🇦', name:'Canada (Toronto)', city:'Toronto', tz:'America/Toronto' },
+  { flag:'🇨🇦', name:'Canada (Vancouver)', city:'Vancouver', tz:'America/Vancouver' },
+  { flag:'🇨🇱', name:'Chile', city:'Santiago', tz:'America/Santiago' },
+  { flag:'🇨🇳', name:'China', city:'Beijing', tz:'Asia/Shanghai' },
+  { flag:'🇨🇴', name:'Colombia', city:'Bogotá', tz:'America/Bogota' },
+  { flag:'🇨🇷', name:'Costa Rica', city:'San José', tz:'America/Costa_Rica' },
+  { flag:'🇭🇷', name:'Croatia', city:'Zagreb', tz:'Europe/Zagreb' },
+  { flag:'🇨🇺', name:'Cuba', city:'Havana', tz:'America/Havana' },
+  { flag:'🇨🇾', name:'Cyprus', city:'Nicosia', tz:'Asia/Nicosia' },
+  { flag:'🇨🇿', name:'Czech Republic', city:'Prague', tz:'Europe/Prague' },
+  { flag:'🇩🇰', name:'Denmark', city:'Copenhagen', tz:'Europe/Copenhagen' },
+  { flag:'🇪🇨', name:'Ecuador', city:'Quito', tz:'America/Guayaquil' },
+  { flag:'🇪🇬', name:'Egypt', city:'Cairo', tz:'Africa/Cairo' },
+  { flag:'🇪🇹', name:'Ethiopia', city:'Addis Ababa', tz:'Africa/Addis_Ababa' },
+  { flag:'🇫🇮', name:'Finland', city:'Helsinki', tz:'Europe/Helsinki' },
+  { flag:'🇫🇷', name:'France', city:'Paris', tz:'Europe/Paris' },
+  { flag:'🇬🇪', name:'Georgia', city:'Tbilisi', tz:'Asia/Tbilisi' },
+  { flag:'🇩🇪', name:'Germany', city:'Berlin', tz:'Europe/Berlin' },
+  { flag:'🇬🇭', name:'Ghana', city:'Accra', tz:'Africa/Accra' },
+  { flag:'🇬🇷', name:'Greece', city:'Athens', tz:'Europe/Athens' },
+  { flag:'🇬🇹', name:'Guatemala', city:'Guatemala City', tz:'America/Guatemala' },
+  { flag:'🇭🇳', name:'Honduras', city:'Tegucigalpa', tz:'America/Tegucigalpa' },
+  { flag:'🇭🇰', name:'Hong Kong', city:'Hong Kong', tz:'Asia/Hong_Kong' },
+  { flag:'🇭🇺', name:'Hungary', city:'Budapest', tz:'Europe/Budapest' },
+  { flag:'🇮🇸', name:'Iceland', city:'Reykjavik', tz:'Atlantic/Reykjavik' },
+  { flag:'🇮🇳', name:'India', city:'New Delhi', tz:'Asia/Kolkata' },
+  { flag:'🇮🇩', name:'Indonesia (Jakarta)', city:'Jakarta', tz:'Asia/Jakarta' },
+  { flag:'🇮🇷', name:'Iran', city:'Tehran', tz:'Asia/Tehran' },
+  { flag:'🇮🇶', name:'Iraq', city:'Baghdad', tz:'Asia/Baghdad' },
+  { flag:'🇮🇪', name:'Ireland', city:'Dublin', tz:'Europe/Dublin' },
+  { flag:'🇮🇱', name:'Israel', city:'Jerusalem', tz:'Asia/Jerusalem' },
+  { flag:'🇮🇹', name:'Italy', city:'Rome', tz:'Europe/Rome' },
+  { flag:'🇯🇲', name:'Jamaica', city:'Kingston', tz:'America/Jamaica' },
+  { flag:'🇯🇵', name:'Japan', city:'Tokyo', tz:'Asia/Tokyo' },
+  { flag:'🇯🇴', name:'Jordan', city:'Amman', tz:'Asia/Amman' },
+  { flag:'🇰🇿', name:'Kazakhstan', city:'Almaty', tz:'Asia/Almaty' },
+  { flag:'🇰🇪', name:'Kenya', city:'Nairobi', tz:'Africa/Nairobi' },
+  { flag:'🇰🇷', name:'South Korea', city:'Seoul', tz:'Asia/Seoul' },
+  { flag:'🇰🇼', name:'Kuwait', city:'Kuwait City', tz:'Asia/Kuwait' },
+  { flag:'🇰🇬', name:'Kyrgyzstan', city:'Bishkek', tz:'Asia/Bishkek' },
+  { flag:'🇱🇦', name:'Laos', city:'Vientiane', tz:'Asia/Vientiane' },
+  { flag:'🇱🇻', name:'Latvia', city:'Riga', tz:'Europe/Riga' },
+  { flag:'🇱🇧', name:'Lebanon', city:'Beirut', tz:'Asia/Beirut' },
+  { flag:'🇱🇾', name:'Libya', city:'Tripoli', tz:'Africa/Tripoli' },
+  { flag:'🇱🇹', name:'Lithuania', city:'Vilnius', tz:'Europe/Vilnius' },
+  { flag:'🇲🇾', name:'Malaysia', city:'Kuala Lumpur', tz:'Asia/Kuala_Lumpur' },
+  { flag:'🇲🇻', name:'Maldives', city:'Malé', tz:'Indian/Maldives' },
+  { flag:'🇲🇽', name:'Mexico (Mexico City)', city:'Mexico City', tz:'America/Mexico_City' },
+  { flag:'🇲🇩', name:'Moldova', city:'Chisinau', tz:'Europe/Chisinau' },
+  { flag:'🇲🇳', name:'Mongolia', city:'Ulaanbaatar', tz:'Asia/Ulaanbaatar' },
+  { flag:'🇲🇦', name:'Morocco', city:'Casablanca', tz:'Africa/Casablanca' },
+  { flag:'🇲🇲', name:'Myanmar', city:'Yangon', tz:'Asia/Rangoon' },
+  { flag:'🇳🇵', name:'Nepal', city:'Kathmandu', tz:'Asia/Kathmandu' },
+  { flag:'🇳🇱', name:'Netherlands', city:'Amsterdam', tz:'Europe/Amsterdam' },
+  { flag:'🇳🇿', name:'New Zealand', city:'Auckland', tz:'Pacific/Auckland' },
+  { flag:'🇳🇬', name:'Nigeria', city:'Lagos', tz:'Africa/Lagos' },
+  { flag:'🇳🇴', name:'Norway', city:'Oslo', tz:'Europe/Oslo' },
+  { flag:'🇴🇲', name:'Oman', city:'Muscat', tz:'Asia/Muscat' },
+  { flag:'🇵🇰', name:'Pakistan', city:'Karachi', tz:'Asia/Karachi' },
+  { flag:'🇵🇦', name:'Panama', city:'Panama City', tz:'America/Panama' },
+  { flag:'🇵🇾', name:'Paraguay', city:'Asuncion', tz:'America/Asuncion' },
+  { flag:'🇵🇪', name:'Peru', city:'Lima', tz:'America/Lima' },
+  { flag:'🇵🇭', name:'Philippines', city:'Manila', tz:'Asia/Manila' },
+  { flag:'🇵🇱', name:'Poland', city:'Warsaw', tz:'Europe/Warsaw' },
+  { flag:'🇵🇹', name:'Portugal', city:'Lisbon', tz:'Europe/Lisbon' },
+  { flag:'🇶🇦', name:'Qatar', city:'Doha', tz:'Asia/Qatar' },
+  { flag:'🇷🇴', name:'Romania', city:'Bucharest', tz:'Europe/Bucharest' },
+  { flag:'🇷🇺', name:'Russia (Moscow)', city:'Moscow', tz:'Europe/Moscow' },
+  { flag:'🇷🇺', name:'Russia (Vladivostok)', city:'Vladivostok', tz:'Asia/Vladivostok' },
+  { flag:'🇸🇦', name:'Saudi Arabia', city:'Riyadh', tz:'Asia/Riyadh' },
+  { flag:'🇸🇳', name:'Senegal', city:'Dakar', tz:'Africa/Dakar' },
+  { flag:'🇷🇸', name:'Serbia', city:'Belgrade', tz:'Europe/Belgrade' },
+  { flag:'🇸🇬', name:'Singapore', city:'Singapore', tz:'Asia/Singapore' },
+  { flag:'🇸🇰', name:'Slovakia', city:'Bratislava', tz:'Europe/Bratislava' },
+  { flag:'🇸🇮', name:'Slovenia', city:'Ljubljana', tz:'Europe/Ljubljana' },
+  { flag:'🇿🇦', name:'South Africa', city:'Johannesburg', tz:'Africa/Johannesburg' },
+  { flag:'🇪🇸', name:'Spain', city:'Madrid', tz:'Europe/Madrid' },
+  { flag:'🇱🇰', name:'Sri Lanka', city:'Colombo', tz:'Asia/Colombo' },
+  { flag:'🇸🇩', name:'Sudan', city:'Khartoum', tz:'Africa/Khartoum' },
+  { flag:'🇸🇪', name:'Sweden', city:'Stockholm', tz:'Europe/Stockholm' },
+  { flag:'🇨🇭', name:'Switzerland', city:'Zurich', tz:'Europe/Zurich' },
+  { flag:'🇸🇾', name:'Syria', city:'Damascus', tz:'Asia/Damascus' },
+  { flag:'🇹🇼', name:'Taiwan', city:'Taipei', tz:'Asia/Taipei' },
+  { flag:'🇹🇯', name:'Tajikistan', city:'Dushanbe', tz:'Asia/Dushanbe' },
+  { flag:'🇹🇿', name:'Tanzania', city:'Dar es Salaam', tz:'Africa/Dar_es_Salaam' },
+  { flag:'🇹🇭', name:'Thailand', city:'Bangkok', tz:'Asia/Bangkok' },
+  { flag:'🇹🇳', name:'Tunisia', city:'Tunis', tz:'Africa/Tunis' },
+  { flag:'🇹🇷', name:'Turkey', city:'Istanbul', tz:'Europe/Istanbul' },
+  { flag:'🇹🇲', name:'Turkmenistan', city:'Ashgabat', tz:'Asia/Ashgabat' },
+  { flag:'🇺🇦', name:'Ukraine', city:'Kyiv', tz:'Europe/Kiev' },
+  { flag:'🇦🇪', name:'UAE', city:'Dubai', tz:'Asia/Dubai' },
+  { flag:'🇬🇧', name:'United Kingdom', city:'London', tz:'Europe/London' },
+  { flag:'🇺🇸', name:'USA (New York)', city:'New York', tz:'America/New_York' },
+  { flag:'🇺🇸', name:'USA (Chicago)', city:'Chicago', tz:'America/Chicago' },
+  { flag:'🇺🇸', name:'USA (Denver)', city:'Denver', tz:'America/Denver' },
+  { flag:'🇺🇸', name:'USA (Los Angeles)', city:'Los Angeles', tz:'America/Los_Angeles' },
+  { flag:'🇺🇿', name:'Uzbekistan', city:'Tashkent', tz:'Asia/Tashkent' },
+  { flag:'🇻🇪', name:'Venezuela', city:'Caracas', tz:'America/Caracas' },
+  { flag:'🇻🇳', name:'Vietnam', city:'Ho Chi Minh City', tz:'Asia/Ho_Chi_Minh' },
+  { flag:'🇾🇪', name:'Yemen', city:'Sana\'a', tz:'Asia/Aden' },
+  { flag:'🇿🇲', name:'Zambia', city:'Lusaka', tz:'Africa/Lusaka' },
+  { flag:'🇿🇼', name:'Zimbabwe', city:'Harare', tz:'Africa/Harare' },
+];
 
+// Active world clocks (stored as tz strings)
+let activeClocks = ['Asia/Kolkata','America/New_York','Europe/London','Asia/Tokyo','Asia/Dubai'];
+
+function getOffsetStr(tz) {
+  try {
+    const now = new Date();
+    const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+    const fmt = new Intl.DateTimeFormat('en', { timeZone: tz, timeZoneName: 'short' });
+    const parts = fmt.formatToParts(now);
+    const tzPart = parts.find(p => p.type === 'timeZoneName');
+    return tzPart ? tzPart.value : '';
+  } catch(e) { return ''; }
+}
+
+function getTzTime(tz) {
+  try {
+    const now = new Date();
+    const fmt12 = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    const fmtDate = new Intl.DateTimeFormat('en-US', { timeZone: tz, weekday: 'short', month: 'short', day: 'numeric' });
+    const parts = fmt12.formatToParts(now);
+    const get = t => (parts.find(p=>p.type===t)||{}).value || '';
+    const timeStr = `${get('hour')}:${get('minute')}:${get('second')}`;
+    const ampm = get('dayPeriod');
+    const dateStr = fmtDate.format(now);
+    return { timeStr, ampm, dateStr };
+  } catch(e) { return { timeStr:'--:--:--', ampm:'', dateStr:'' }; }
+}
+
+function renderWorldClocks() {
+  const grid = document.getElementById('worldClockGrid');
+  if (activeClocks.length === 0) {
+    grid.innerHTML = `<div class="tz-empty"><span>🌍</span>No clocks added yet.<br>Search a country above to add one.</div>`;
+    return;
+  }
+  grid.innerHTML = activeClocks.map((tz, idx) => {
+    const entry = TZ_LIST.find(t => t.tz === tz) || { flag:'🌐', name: tz, city: tz };
+    const { timeStr, ampm, dateStr } = getTzTime(tz);
+    const offset = getOffsetStr(tz);
+    return `
+      <div class="tz-card" id="tzcard-${idx}">
+        <div class="tz-card-top">
+          <div class="tz-card-info">
+            <div class="tz-card-flag">${entry.flag}</div>
+            <div class="tz-card-country">${entry.name}</div>
+            <div class="tz-card-zone">${entry.city}</div>
+          </div>
+          <button class="tz-delete-btn" onclick="removeClock(${idx})" title="Remove">✕</button>
+        </div>
+        <div class="tz-time" id="tztime-${idx}">${timeStr} <span style="font-size:0.9rem;color:var(--accent)">${ampm}</span></div>
+        <div class="tz-date-row">
+          <div class="tz-date" id="tzdate-${idx}">${dateStr}</div>
+          <div class="tz-offset">${offset}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function updateWorldClockTimes() {
+  activeClocks.forEach((tz, idx) => {
+    const te = document.getElementById(`tztime-${idx}`);
+    const de = document.getElementById(`tzdate-${idx}`);
+    if (!te) return;
+    const { timeStr, ampm, dateStr } = getTzTime(tz);
+    te.innerHTML = `${timeStr} <span style="font-size:0.9rem;color:var(--accent)">${ampm}</span>`;
+    if (de) de.textContent = dateStr;
+  });
+}
+
+function removeClock(idx) {
+  activeClocks.splice(idx, 1);
+  renderWorldClocks();
+}
+
+// ─── TZ SEARCH DROPDOWN ───────────────────────────────────────────────────
+let dropCloseTimeout = null;
+
+function filterTz() {
+  const q = document.getElementById('tzSearch').value.toLowerCase().trim();
+  const drop = document.getElementById('tzDropdown');
+  const filtered = q.length < 1
+    ? TZ_LIST.slice(0, 30)
+    : TZ_LIST.filter(t =>
+        t.name.toLowerCase().includes(q) ||
+        t.city.toLowerCase().includes(q) ||
+        t.tz.toLowerCase().includes(q)
+      ).slice(0, 30);
+
+  drop.innerHTML = filtered.length === 0
+    ? '<div class="tz-option" style="color:var(--muted)">No results found</div>'
+    : filtered.map(t => `
+        <div class="tz-option" onmousedown="addClock('${t.tz}')">
+          <span class="tz-flag">${t.flag}</span>
+          <span class="tz-name">${t.name}</span>
+          <span class="tz-zone">${t.city}</span>
+        </div>`).join('');
+  drop.classList.add('open');
+}
+
+function openTzDrop() {
+  clearTimeout(dropCloseTimeout);
+  filterTz();
+}
+
+function closeTzDrop() {
+  dropCloseTimeout = setTimeout(() => {
+    document.getElementById('tzDropdown').classList.remove('open');
+  }, 200);
+}
+
+function addClock(tz) {
+  if (!activeClocks.includes(tz)) {
+    activeClocks.push(tz);
+    renderWorldClocks();
+  }
+  document.getElementById('tzSearch').value = '';
+  document.getElementById('tzDropdown').classList.remove('open');
+}
+
+// ─── LIVE CLOCK ────────────────────────────────────────────────────────────
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function updateClock() {
   const now = new Date();
   const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
-  const ms = now.getMilliseconds();
-
-  // Analog
-  const sDeg = (s + ms/1000) * 6;
-  const mDeg = (m + s/60) * 6;
-  const hDeg = ((h % 12) + m/60) * 30;
-  document.getElementById('secHand').setAttribute('transform', `rotate(${sDeg},80,80)`);
-  document.getElementById('minHand').setAttribute('transform', `rotate(${mDeg},80,80)`);
-  document.getElementById('hourHand').setAttribute('transform', `rotate(${hDeg},80,80)`);
-
-  // Digital
   const h12 = h % 12 || 12, ampm = h < 12 ? 'AM' : 'PM';
+
   document.getElementById('digitalClock').textContent = `${pad(h12)}:${pad(m)}:${pad(s)}`;
   document.getElementById('digitalAmPm').textContent = ampm;
   document.getElementById('digitalDate').textContent =
     `${DAYS[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 
+  // local tz name
+  try {
+    const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.getElementById('localTzName').textContent = tzName;
+  } catch(e) {}
+
   // Header
   document.getElementById('headerTime').textContent = `${pad(h12)}:${pad(m)}:${pad(s)}`;
   document.getElementById('headerAmPm').textContent = ampm;
+
+  // World clocks (update every second via shared interval)
+  updateWorldClockTimes();
 }
-setInterval(updateClock, 50);
+setInterval(updateClock, 1000);
 updateClock();
+renderWorldClocks();
 
 // ─── POMODORO ──────────────────────────────────────────────────────────────
 const POMO_MODES = { focus: 25*60, short: 5*60, long: 15*60 };
